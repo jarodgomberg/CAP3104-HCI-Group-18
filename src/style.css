@@ -1,1 +1,131 @@
+@import url("https://fonts.googleapis.com/css2?family=Titan+One&display=swap");
 
+body {
+	font: 18px "Titan One", cursive;
+	color: white;
+	min-height: 100vh;
+	padding: 2rem;
+}
+
+&::before {
+	content: "";
+	position: fixed;
+	inset: 0;
+	z-index: -1;
+	pointer-events: none;
+	background: url("background-placeholder.png") no-repeat center;
+	background-size: cover;
+}
+@keyframes slowZoom {
+	0% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.1);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
+.home {
+	position: relative;
+	align-items: center;
+	justify-content: center;
+	display: flex;
+	flex-direction: column;
+	text-shadow: 0 0 20px #000000;
+}
+
+.home h1 {
+	font-size: 100px;
+	margin-top: 150px;
+	text-shadow: 0 0 20px #000000;
+	animation: slowZoom 15s ease infinite;
+}
+
+.home p {
+	font-size: 30px;
+}
+
+.btn-container {
+	top: 50%;
+	left: 50%;
+	text-align: center;
+}
+
+.btn-container button {
+	align-self: center;
+	padding: 30px;
+	background-position: 0 90%;
+	background-size: 4px 3px;
+	border-radius: 15px 225px 255px 15px 15px 255px 225px 15px;
+	border: 2px solid black;
+	margin: 30px;
+	font: 18px "Titan One", cursive;
+	box-shadow: rgba(0, 0, 0, 0.2) 15px 28px 25px -18px;
+	box-sizing: border-box;
+	cursor: pointer;
+	border-bottom-left-radius: 15px 255px;
+	border-bottom-right-radius: 225px 15px;
+	border-top-left-radius: 255px 15px;
+	border-top-right-radius: 15px 225px;
+}
+
+.btn-container button:hover {
+	transform: scale(1.2);
+	transition: all 0.2s ease-in;
+	box-shadow: 0 0 20px rgba(226, 224, 224, 0.5);
+}
+
+.navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.navbar li {
+    float: left;
+}
+
+.navbar li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.navbar li a:hover {
+    background-color: #545454;
+}
+
+.game {
+	margin: auto;
+	width: 50%;
+	padding: 10px;
+	position: relative;
+	justify-content: center;
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+}
+
+.game p {
+	margin-top: 100px;
+	font-size: 40px;
+}
+
+.game-container {
+	height: 500px;
+	width: 750px;
+	border: 10px solid black;
+	background: linear-gradient(#e66465, #9198e5);
+}
+
+.game-container p {
+	font-size: 30px;
+	line-height: 150px;
+	text-align: center;
+}
