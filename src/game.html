@@ -7,11 +7,30 @@
 		<link rel="stylesheet" href="style.css" />
 	</head>
 	<body>
+		<div class="navbar">
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="game.html">Play!</a></li>
+				<li><a href="howTo.html">How To</a></li>
+				<li><a href="scores.html">Highscores</a></li>
+			</ul>
+		</div>
 		<div class="game">
 			<p>Marvelous Maze</p>
 			<div class="game-container">
-				<p>Game Goes Here</p>
+				<div class="user-prompt-container">
+					<p>Enter a username</p>
+					<input
+						type="text"
+						id="user-input"
+						placeholder="Username"
+						required
+						maxlength="13"
+					/>
+					<button onclick="addUser();">Start!</button>
+				</div>
 			</div>
-		</di>
+		</div>
+		<script src="script.js"></script>
 	</body>
 </html>
