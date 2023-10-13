@@ -7,7 +7,7 @@ body {
 	padding: 2rem;
 }
 
-&::before {
+body::before {
 	content: "";
 	position: fixed;
 	inset: 0;
@@ -95,10 +95,11 @@ body {
 	text-align: center;
 	padding: 14px 16px;
 	text-decoration: none;
+	border: 2px solid transparent;
 }
 
 .navbar li a:hover {
-	background-color: #545454;
+	border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 .game {
@@ -113,21 +114,15 @@ body {
 }
 
 .game p {
-	margin-top: 100px;
+	margin-top: 80px;
 	font-size: 40px;
 }
 
 .game-container {
 	height: 500px;
 	width: 750px;
-	border: 10px solid black;
-	background: linear-gradient(#e66465, #9198e5);
-}
-
-.game-container p {
-	font-size: 30px;
-	line-height: 150px;
-	text-align: center;
+	border: 2px solid rgba(255, 255, 255, 0.2);
+	background: linear-gradient(to bottom, #3a404d, #181c26);
 }
 
 .how-to {
@@ -145,13 +140,13 @@ body {
 
 .instructions-container {
 	margin-top: 50px;
-	width: 7700px;
+	width: 700px;
 	height: 500px;
 }
 
 .how-to h1 {
 	text-align: center;
-	margin-top: 150px;
+	margin-top: 80px;
 	font-size: 60px;
 }
 
@@ -167,4 +162,108 @@ body {
 	vertical-align: middle;
 	width: 70px;
 	height: 70px;
+}
+
+.user-prompt-container {
+	top: 20%;
+	left: 20%;
+	width: 50%;
+	padding: 30px 40px;
+	position: relative;
+	justify-content: center;
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	text-shadow: 0 0 20px #303030;
+	background-color: transparent;
+	border-radius: 10px;
+	border: 2px solid rgba(255, 255, 255, 0.2);
+	backdrop-filter: blur(20px);
+}
+
+.user-prompt-container p {
+	margin: auto;
+	font-size: 30px;
+	line-height: 150px;
+	text-align: center;
+}
+
+.user-prompt-container input {
+	text-align: center;
+	padding: 15px;
+	outline: none;
+	background: transparent;
+	border: 2px solid rgba(255, 255, 255, 0.2);
+	border-radius: 10px;
+	font-size: 20px;
+	color: white;
+}
+
+.user-prompt-container input::placeholder {
+	color: white;
+}
+
+.user-prompt-container button {
+	margin-top: 15px;
+	text-align: center;
+	padding: 15px;
+	outline: none;
+	border: 2px solid rgba(255, 255, 255, 0.2);
+	border-radius: 10px;
+	font-size: 20px;
+	color: black;
+	cursor: pointer;
+}
+
+.leaderboard {
+	margin: auto;
+	margin-top: 100px;
+	width: 600px;
+	height: 600px;
+	background: linear-gradient(to bottom, #3a404d, #181c26);
+	border-radius: 10px;
+	box-shadow: 0 7px 30px rgba(62, 9, 11, 0.3);
+	text-align: left;
+}
+
+.leaderboard h1 {
+	font-size: 50px;
+	color: #e1e1e1;
+	padding: 12px 13px 18px;
+	text-align: center;
+}
+
+.leaderboard ol {
+	display: inline-block;
+	text-align: left;
+	padding: 0;
+}
+
+.leaderboard li {
+	display: flex;
+	justify-content: space-between;
+	font-size: 30px;
+	counter-increment: leaderboard;
+	padding: 20px 30px 20px 90px;
+	background: linear-gradient(to right, transparent 10px, #454a55 20px);
+	margin-bottom: 10px;
+	width: 100%;
+	align-items: center;
+}
+
+.leaderboard li::before {
+	content: counter(leaderboard);
+	margin-right: 10px;
+}
+
+.leaderboard li mark {
+	margin-right: 10px;
+	color: white;
+	background: none;
+}
+
+.leaderboard li small {
+	width: 30px;
+	text-align: center;
+	margin-left: 50px;
 }
