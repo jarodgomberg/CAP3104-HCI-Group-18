@@ -15,10 +15,10 @@
 				<li><a href="scores.html">Highscores</a></li>
 			</ul>
 		</div>
-		<div class="game">
-			<p>Marvelous Maze</p>
-			<div class="game-container">
-				<div class="user-prompt-container">
+		<div class="game" id="view">
+			<p id="title">Marvelous Maze</p>
+			<div class="game-container" id="maze-container">
+				<div class="user-prompt-container" id="prompt-container">
 					<p>Enter a username</p>
 					<input
 						type="text"
@@ -27,10 +27,37 @@
 						required
 						maxlength="13"
 					/>
-					<button onclick="addUser();">Start!</button>
+					<div class="character-dropdown">
+						<select id="character-select" onchange="changeCharacterImage()">
+							<option value="adventurer">Adventurer</option>
+							<option value="cowhand">Cowhand</option>
+							<option value="mushroom">Mushroom</option>
+						</select>
+						<img
+							src="Icons/adventurer.gif"
+							alt="Adventurer"
+							id="character-icon"
+						/>
+					</div>
+					<select id="difficulty">
+						<option value="10">Easy</option>
+						<option value="15">Medium</option>
+						<option value="25">Hard</option>
+					</select>
+					<button id="start-button">Start!</button>
 				</div>
 			</div>
+			<canvas
+				tabindex="0"
+				style="display: none"
+				id="mazeCanvas"
+				class="border"
+				height="1100"
+				width="1100"
+			></canvas>
+			<p id="moves"></p>
 		</div>
+		<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 		<script src="script.js"></script>
 	</body>
 </html>
