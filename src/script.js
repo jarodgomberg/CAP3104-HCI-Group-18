@@ -1,15 +1,3 @@
-function rand(max) {
-	return Math.floor(Math.random() * max);
-}
-
-function shuffle(a) {
-	for (let i = a.length - 1; i > 0; i--) {
-		const j = Math.floor(Math.random() * (i + 1));
-		[a[i], a[j]] = [a[j], a[i]];
-	}
-	return a;
-}
-
 /* function changeBrightness(factor, sprite) {
 	var virtCanvas = document.createElement("canvas");
 	virtCanvas.width = 500;
@@ -31,6 +19,18 @@ function shuffle(a) {
 	virtCanvas.remove();
 	return spriteOutput;
 } */
+
+function rand(max) {
+	return Math.floor(Math.random() * max);
+}
+
+function shuffle(a) {
+	for (let i = a.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[a[i], a[j]] = [a[j], a[i]];
+	}
+	return a;
+}
 
 function displayVictoryMess(moves) {
 	const username = document.getElementById("user-input").value.trim();
@@ -62,7 +62,7 @@ function displayVictoryMess(moves) {
 	document.body.appendChild(overlay);
 
 	//add the moves to the leaderboard and display the updated leaderboard
-	updateLeaderboard(username, moves);
+	//updateLeaderboard(username, moves);
 }
 
 function Maze(Width, Height) {
@@ -248,35 +248,30 @@ function DrawMaze(Maze, ctx, cellsize, endSprite = null, wallImage = null) {
 		var y = yCord * cellSize;
 		ctx.lineWidth = 3;
 
-		//create walls from image
-		if (wallImage !== null) {
-			ctx.drawImage(wallImage, x, y, cellSize, cellSize);
-		} else {
-			// use drawing lines if wallImage is not provided
-			if (cell.n == false) {
-				ctx.beginPath();
-				ctx.moveTo(x, y);
-				ctx.lineTo(x + cellSize, y);
-				ctx.stroke();
-			}
-			if (cell.s === false) {
-				ctx.beginPath();
-				ctx.moveTo(x, y + cellSize);
-				ctx.lineTo(x + cellSize, y + cellSize);
-				ctx.stroke();
-			}
-			if (cell.e === false) {
-				ctx.beginPath();
-				ctx.moveTo(x + cellSize, y);
-				ctx.lineTo(x + cellSize, y + cellSize);
-				ctx.stroke();
-			}
-			if (cell.w === false) {
-				ctx.beginPath();
-				ctx.moveTo(x, y);
-				ctx.lineTo(x, y + cellSize);
-				ctx.stroke();
-			}
+		// Draw lines for walls
+		if (cell.n === false) {
+			ctx.beginPath();
+			ctx.moveTo(x, y);
+			ctx.lineTo(x + cellSize, y);
+			ctx.stroke();
+		}
+		if (cell.s === false) {
+			ctx.beginPath();
+			ctx.moveTo(x, y + cellSize);
+			ctx.lineTo(x + cellSize, y + cellSize);
+			ctx.stroke();
+		}
+		if (cell.e === false) {
+			ctx.beginPath();
+			ctx.moveTo(x + cellSize, y);
+			ctx.lineTo(x + cellSize, y + cellSize);
+			ctx.stroke();
+		}
+		if (cell.w === false) {
+			ctx.beginPath();
+			ctx.moveTo(x, y);
+			ctx.lineTo(x, y + cellSize);
+			ctx.stroke();
 		}
 	}
 
@@ -445,89 +440,14 @@ function Player(maze, c, _cellsize, onComplete, gifImage = null) {
 				break;
 		}
 	}
-	var bounceHeight = 10; //change bounce height
-	var isMovingUp = true;
 
-	function animateSprite() {
-		frameIndex = (frameIndex + 1) % numberOfFrames;
-
-		//calculate the bounce effect
-		var bounceOffset = isMovingUp ? -bounceHeight : bounceHeight;
-		var newY = cellCoords.y * cellSize + offsetLeft + bounceOffset;
-
-		//clear the previous position
-		ctx.clearRect(
-			cellCoords.x * cellSize + offsetLeft,
-			cellCoords.y * cellSize + offsetLeft,
-			cellSize - offsetRight,
-			cellSize - offsetRight
-		);
-
-		//draw player's sprite with the bounce effect
-		ctx.drawImage(
-			gifImage,
-			frameIndex * spriteFrameWidth,
-			0,
-			spriteFrameWidth,
-			gifImage.height,
-			coord.x * cellSize + offsetLeft,
-			newY,
-			cellSize - offsetRight,
-			cellSize - offsetRight
-		);
-
-		//toggle the direction of the bounce
-		if (isMovingUp && newY <= coord.y * cellSize + offsetLeft - bounceHeight) {
-			isMovingUp = false;
-		} else if (!isMovingUp && newY >= coord.y * cellSize + offsetLeft) {
-			isMovingUp = true;
-		}
-
-		requestAnimationFrame(animateSprite);
-	}
 	this.bindKeyDown = function () {
 		window.addEventListener("keydown", check, false);
-
-		$("#view").swipe({
-			swipe: function (
-				event,
-				direction,
-				distance,
-				duration,
-				fingerCount,
-				fingerData
-			) {
-				console.log(direction);
-				switch (direction) {
-					case "up":
-						check({
-							keyCode: 38,
-						});
-						break;
-					case "down":
-						check({
-							keyCode: 40,
-						});
-						break;
-					case "left":
-						check({
-							keyCode: 37,
-						});
-						break;
-					case "right":
-						check({
-							keyCode: 39,
-						});
-						break;
-				}
-			},
-			threshold: 0,
-		});
 	};
 
 	this.unbindKeyDown = function () {
 		window.removeEventListener("keydown", check, false);
-		$("#view").swipe("destroy");
+		$("#view").off("click");
 	};
 
 	drawSprite(maze.startCoord());
@@ -537,10 +457,6 @@ function Player(maze, c, _cellsize, onComplete, gifImage = null) {
 	this.updateCharacterImage = function (newImage) {
 		gifImage = newImage;
 	};
-
-	if (gifImage !== null) {
-		animateSprite();
-	}
 }
 
 var mazeCanvas = document.getElementById("mazeCanvas");
@@ -606,6 +522,7 @@ window.onload = function () {
 			if (completeOne === true && completeTwo === true) {
 				console.log("Runs");
 				setTimeout(function () {
+					console.log("Wallimage", wallImage);
 					makeMaze();
 				}, 500);
 			}
@@ -620,7 +537,6 @@ window.onload = function () {
 				`Icons/${selectedCharacter}.gif` + "?" + new Date().getTime();
 			sprite.setAttribute("crossOrigin", " ");
 			sprite.onload = function () {
-				sprite = changeBrightness(1.2, sprite);
 				completeOne = true;
 				console.log(completeOne);
 				isComplete();
@@ -646,7 +562,6 @@ window.onload = function () {
 		sprite.src = `Icons/${selectedCharacter}.gif` + "?" + new Date().getTime();
 		sprite.setAttribute("crossOrigin", " ");
 		sprite.onload = function () {
-			sprite = changeBrightness(1.2, sprite);
 			completeOne = true;
 			console.log(completeOne);
 			isComplete();
@@ -656,7 +571,6 @@ window.onload = function () {
 		finishSprite.src = "Icons/burger.png" + "?" + new Date().getTime();
 		finishSprite.setAttribute("crossOrigin", " ");
 		finishSprite.onload = function () {
-			finishSprite = changeBrightness(1.1, finishSprite);
 			completeTwo = true;
 			console.log(completeTwo);
 			isComplete();
@@ -664,11 +578,11 @@ window.onload = function () {
 	};
 
 	// Call createLeaderboard here if needed
-	createLeaderboard();
+	//createLeaderboard();
 };
 
 function makeMaze() {
-	if (player != undefined) {
+	if (player !== undefined && typeof player.unbindKeyDown === "function") {
 		player.unbindKeyDown();
 		player = null;
 	}
@@ -680,7 +594,7 @@ function makeMaze() {
 	difficulty = e.options[e.selectedIndex].value;
 	cellSize = mazeCanvas.width / difficulty;
 	maze = new Maze(difficulty, difficulty);
-	draw = new DrawMaze(maze, ctx, cellSize, finishSprite, wallImage);
+	draw = new DrawMaze(maze, ctx, cellSize, finishSprite);
 	player = new Player(maze, mazeCanvas, cellSize, displayVictoryMess, sprite);
 
 	var wallImage = new Image();
@@ -738,7 +652,7 @@ function addUser() {
 		"Usernames in sessionStorage:",
 		JSON.parse(sessionStorage.getItem("usernames"))
 	);
-	createLeaderboard();
+	//createLeaderboard();
 }
 
 //function to add all users to leaderboard (in order of last entered)
@@ -783,7 +697,7 @@ function updateLeaderboard(username, moves) {
 
 	sessionStorage.setItem("usernames", JSON.stringify(usernames));
 
-	createLeaderboard();
+	//createLeaderboard();
 }
 
 function changeCharacterImage() {
