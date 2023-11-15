@@ -706,3 +706,6 @@ function changeCharacterImage() {
 
 	document.getElementById("character-icon").src = imageUrl;
 }
+
+
+	
