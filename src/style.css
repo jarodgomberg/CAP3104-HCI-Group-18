@@ -1,7 +1,10 @@
-@import url("https://fonts.googleapis.com/css2?family=Titan+One&display=swap");
+@font-face {
+	font-family: pixelFont;
+	src: url('pixel.ttf');
+}
 
 body {
-	font: 18px "Titan One", cursive;
+	font-family: pixelFont;
 	color: white;
 	min-height: 100vh;
 	padding: 2rem;
@@ -13,8 +16,6 @@ body::before {
 	inset: 0;
 	z-index: -1;
 	pointer-events: none;
-	background: url("Images/background-placeholder.png") no-repeat center;
-	background-size: cover;
 }
 @keyframes slowZoom {
 	0% {
@@ -46,6 +47,8 @@ body::before {
 
 .home p {
 	font-size: 30px;
+	animation: slowZoom 15s ease infinite;
+	animation-delay: 7.5s;
 }
 
 .btn-container {
@@ -59,17 +62,16 @@ body::before {
 	padding: 30px;
 	background-position: 0 90%;
 	background-size: 4px 3px;
-	border-radius: 15px 225px 255px 15px 15px 255px 225px 15px;
 	border: 2px solid black;
 	margin: 30px;
-	font: 18px "Titan One", cursive;
+	font-family: pixelFont;
 	box-shadow: rgba(0, 0, 0, 0.2) 15px 28px 25px -18px;
 	box-sizing: border-box;
 	cursor: pointer;
-	border-bottom-left-radius: 15px 255px;
-	border-bottom-right-radius: 225px 15px;
-	border-top-left-radius: 255px 15px;
-	border-top-right-radius: 15px 225px;
+	border-bottom-left-radius: 255px 255px;
+	border-bottom-right-radius: 255px 255px;
+	border-top-left-radius: 255px 255px;
+	border-top-right-radius: 255px 255px;
 }
 
 .btn-container button:hover {
@@ -154,6 +156,8 @@ body::before {
 
 .instructions-container #start-button {
 	vertical-align: middle;
+	width: 130px;
+	height: 80px;
 }
 
 .instructions-container #arrows {
@@ -211,6 +215,7 @@ body::before {
 }
 
 .user-prompt-container input::placeholder {
+	font-family: pixelFont;
 	color: white;
 }
 
@@ -235,8 +240,7 @@ body::before {
 	margin-top: 100px;
 	width: 600px;
 	height: 600px;
-	background: linear-gradient(to bottom, #3a404d, #181c26);
-	border-radius: 10px;
+	background-image: url("Images/hedge50x50.png");	border-radius: 10px;
 	box-shadow: 0 7px 30px rgba(62, 9, 11, 0.3);
 	text-align: left;
 }
@@ -260,7 +264,7 @@ body::before {
 	font-size: 30px;
 	counter-increment: leaderboard;
 	padding: 20px 30px 20px 90px;
-	background: linear-gradient(to right, transparent 10px, #454a55 20px);
+	background: linear-gradient(to right, transparent 10px, #023203, #0d4f0e 20px);
 	margin-bottom: 10px;
 	width: 100%;
 	align-items: center;
