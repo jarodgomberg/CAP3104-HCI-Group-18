@@ -10,26 +10,32 @@
 		<div class="navbar">
 			<ul>
 				<li><a href="index.html">Home</a></li>
-				<li><a href="game.html">Play!</a></li>
+				<li><a href="game.html">Play</a></li>
 				<li><a href="howTo.html">How To</a></li>
-				<li><a href="scores.html">Highscores</a></li>
+				<li><a href="scores.html">Scores</a></li>
 			</ul>
 		</div>
 		<div class="game" id="view">
 			<p id="title">Marvelous Maze</p>
 			<div class="game-container" id="maze-container">
 				<div class="user-prompt-container" id="prompt-container">
-					<p>Enter a username</p>
+					<p>Begin your adventure</p>
 					<input
 						type="text"
 						id="user-input"
-						placeholder="Username"
+						placeholder="Enter a username.."
 						required
 						maxlength="13"
 						autocomplete="off"
+						onfocus="this.placeholder=''"
 					/>
 					<div class="character-dropdown">
-						<select id="character-select" onchange="changeCharacterImage()">
+						<select
+							id="character-select"
+							onchange="changeCharacterImage()"
+							placeholder=""
+						>
+							<option value="" disabled selected>Character..</option>
 							<option value="adventurer">Adventurer</option>
 							<option value="cowhand">Cowhand</option>
 							<option value="mushroom">Mushroom</option>
@@ -41,6 +47,7 @@
 						/>
 					</div>
 					<select id="difficulty">
+						<option value="" disabled selected>Difficulty..</option>
 						<option value="10">Easy</option>
 						<option value="15">Medium</option>
 						<option value="25">Hard</option>
@@ -61,6 +68,5 @@
 		<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 		<script src="script.js"></script>
 		<script src="dynamicBG.js"></script>
-
 	</body>
 </html>
