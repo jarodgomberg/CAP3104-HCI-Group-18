@@ -1,25 +1,3 @@
-/* function changeBrightness(factor, sprite) {
-	var virtCanvas = document.createElement("canvas");
-	virtCanvas.width = 500;
-	virtCanvas.height = 500;
-	var context = virtCanvas.getContext("2d");
-	context.drawImage(sprite, 0, 0, 500, 500);
-
-	var imgData = context.getImageData(0, 0, 500, 500);
-
-	for (let i = 0; i < imgData.data.length; i += 4) {
-		imgData.data[i] = imgData.data[i] * factor;
-		imgData.data[i + 1] = imgData.data[i + 1] * factor;
-		imgData.data[i + 2] = imgData.data[i + 2] * factor;
-	}
-	context.putImageData(imgData, 0, 0);
-
-	var spriteOutput = new Image();
-	spriteOutput.src = virtCanvas.toDataURL();
-	virtCanvas.remove();
-	return spriteOutput;
-} */
-
 function rand(max) {
 	return Math.floor(Math.random() * max);
 }
@@ -61,8 +39,7 @@ function displayVictoryMess(moves) {
 	//append the overlay to the body
 	document.body.appendChild(overlay);
 
-	//add the moves to the leaderboard and display the updated leaderboard
-	//updateLeaderboard(username, moves);
+	updateUserLeaderboard(username, moves);
 }
 
 function Maze(Width, Height) {
@@ -469,69 +446,124 @@ var difficulty;
 // sprite.src = 'media/sprite.png';
 
 window.onload = function () {
-	//add an event listener for the "Start" button
-	document
-		.getElementById("start-button")
-		.addEventListener("click", function () {
-			// Check if a username is entered
-			const userInput = document.getElementById("user-input");
-			const username = userInput.value.trim();
+	// Check if on the game.html page
+	if (window.location.pathname.includes("game.html")) {
+		// Add an event listener for the "Start" button
+		document
+			.getElementById("start-button")
+			.addEventListener("click", function () {
+				// Check if a username is entered
+				const userInput = document.getElementById("user-input");
+				const username = userInput.value.trim();
 
-			if (username === "") {
-				alert("Please enter a username.");
-				return;
+				if (username === "") {
+					alert("Please enter a username.");
+					return;
+				}
+
+				const currentUsers =
+					JSON.parse(sessionStorage.getItem("usernames")) || [];
+				const existingUser = currentUsers.find(
+					(user) => user.username === username
+				);
+
+				if (existingUser) {
+					//Username already exists, show an alert
+					alert("This username already exists. Please choose a different one.");
+					return;
+				}
+
+				const characterSelect = document.getElementById("character-select");
+				const characterValue = characterSelect.value;
+				if (!characterValue) {
+					alert("Please select a character.");
+					return;
+				}
+
+				const difficultySelect = document.getElementById("difficulty");
+				const difficultyValue = difficultySelect.value;
+				if (!difficultyValue) {
+					alert("Please select a difficulty.");
+					return;
+				}
+
+				//if a username is entered, add it to the leaderboard
+				addUser();
+
+				//hide previous elements and display the maze canvas
+				document.getElementById("mazeCanvas").style.display = "block";
+				document.getElementById("prompt-container").style.display = "none";
+				document.getElementById("maze-container").style.display = "none";
+				document.getElementById("moves").style.display = "none";
+				document.getElementById("title").style.display = "none";
+
+				//call function to generate and display maze
+				makeMaze();
+			});
+
+		// Add event listener for keydown
+		window.addEventListener(
+			"keydown",
+			function (e) {
+				if (
+					["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].indexOf(
+						e.code
+					) > -1
+				) {
+					e.preventDefault();
+				}
+			},
+			false
+		);
+
+		//load wallImage
+		var wallImage = new Image();
+		wallImage.src = "Images/hedge50x50.png" + "?" + new Date().getTime();
+		wallImage.setAttribute("crossOrigin", " ");
+		wallImage.onload = function () {
+			// Load and edit sprites
+			var completeOne = false;
+			var completeTwo = false;
+			var isComplete = () => {
+				if (completeOne === true && completeTwo === true) {
+					console.log("Runs");
+					setTimeout(function () {
+						console.log("Wallimage", wallImage);
+						makeMaze();
+					}, 500);
+				}
+			};
+
+			//load the default character
+			var selectedCharacter = "adventurer";
+
+			function loadCharacter() {
+				sprite = new Image();
+				sprite.src =
+					`Icons/${selectedCharacter}.gif` + "?" + new Date().getTime();
+				sprite.setAttribute("crossOrigin", " ");
+				sprite.onload = function () {
+					completeOne = true;
+					console.log(completeOne);
+					isComplete();
+				};
 			}
 
-			// If a username is entered, add it to the leaderboard
-			addUser();
+			// Get the selected character from the dropdown
+			const characterSelect = document.getElementById("character-select");
+			if (characterSelect) {
+				selectedCharacter = characterSelect.value;
 
-			//hide previous elements and display the maze canvas
-			document.getElementById("mazeCanvas").style.display = "block";
-			document.getElementById("prompt-container").style.display = "none";
-			document.getElementById("maze-container").style.display = "none";
-			document.getElementById("moves").style.display = "none";
-			document.getElementById("title").style.display = "none";
-
-			//call the function to generate and display the maze
-			makeMaze();
-		});
-
-	window.addEventListener(
-		"keydown",
-		function (e) {
-			if (
-				["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].indexOf(
-					e.code
-				) > -1
-			) {
-				e.preventDefault();
+				// Get any changes in the dropdown selection
+				characterSelect.addEventListener("change", function () {
+					selectedCharacter = characterSelect.value;
+					loadCharacter();
+				});
 			}
-		},
-		false
-	);
 
-	// Load wallImage
-	var wallImage = new Image();
-	wallImage.src = "Images/hedge50x50.png" + "?" + new Date().getTime();
-	wallImage.setAttribute("crossOrigin", " ");
-	wallImage.onload = function () {
-		// Load and edit sprites
-		var completeOne = false;
-		var completeTwo = false;
-		var isComplete = () => {
-			if (completeOne === true && completeTwo === true) {
-				console.log("Runs");
-				setTimeout(function () {
-					console.log("Wallimage", wallImage);
-					makeMaze();
-				}, 500);
-			}
-		};
+			// Load the character initially
+			loadCharacter();
 
-		//load the default character
-		var selectedCharacter = "adventurer";
-
-		function loadCharacter() {
 			sprite = new Image();
 			sprite.src =
 				`Icons/${selectedCharacter}.gif` + "?" + new Date().getTime();
@@ -541,44 +573,20 @@ window.onload = function () {
 				console.log(completeOne);
 				isComplete();
 			};
-		}
 
-		//get the selected character from the dropdown
-		const characterSelect = document.getElementById("character-select");
-		if (characterSelect) {
-			selectedCharacter = characterSelect.value;
-
-			//get any changes in the dropdown selection
-			characterSelect.addEventListener("change", function () {
-				selectedCharacter = characterSelect.value;
-				loadCharacter();
-			});
-		}
-
-		// Load the character initially
-		loadCharacter();
-
-		sprite = new Image();
-		sprite.src = `Icons/${selectedCharacter}.gif` + "?" + new Date().getTime();
-		sprite.setAttribute("crossOrigin", " ");
-		sprite.onload = function () {
-			completeOne = true;
-			console.log(completeOne);
-			isComplete();
+			finishSprite = new Image();
+			finishSprite.src = "Icons/burger.png" + "?" + new Date().getTime();
+			finishSprite.setAttribute("crossOrigin", " ");
+			finishSprite.onload = function () {
+				completeTwo = true;
+				console.log(completeTwo);
+				isComplete();
+			};
 		};
 
-		finishSprite = new Image();
-		finishSprite.src = "Icons/burger.png" + "?" + new Date().getTime();
-		finishSprite.setAttribute("crossOrigin", " ");
-		finishSprite.onload = function () {
-			completeTwo = true;
-			console.log(completeTwo);
-			isComplete();
-		};
-	};
-
-	// Call createLeaderboard here if needed
-	//createLeaderboard();
+		// Call createLeaderboard here if needed
+		// createLeaderboard();
+	}
 };
 
 function makeMaze() {
@@ -626,9 +634,16 @@ function resetMazeData() {
 //function to add usernames entered in game window to the leaderboard
 function addUser() {
 	const userInput = document.getElementById("user-input");
+
+	// Check if the element with ID "user-input" exists
+	if (!userInput) {
+		console.error("Element with ID 'user-input' not found.");
+		return;
+	}
+
 	const username = userInput.value;
 
-	if (username.trim() === "") {
+	if (!username || username.trim() === "") {
 		alert("Please enter a username.");
 		return;
 	}
@@ -637,14 +652,14 @@ function addUser() {
 	const usernames = JSON.parse(sessionStorage.getItem("usernames")) || [];
 
 	// update username list (add new)
-	usernames.unshift(username);
+	usernames.unshift({ username, moves: 0 });
 
 	// maintain 5 users on leaderboard
 	if (usernames.length > 5) {
 		usernames.pop();
 	}
 
-	// use json.stringify to store list of users per current session
+	// use json.stringify to store the list of users per the current session
 	sessionStorage.setItem("usernames", JSON.stringify(usernames));
 
 	console.log("Usernames added:", username);
@@ -652,52 +667,6 @@ function addUser() {
 		"Usernames in sessionStorage:",
 		JSON.parse(sessionStorage.getItem("usernames"))
 	);
-	//createLeaderboard();
-}
-
-//function to add all users to leaderboard (in order of last entered)
-function createLeaderboard() {
-	const leaderboard = document.getElementById("score-list");
-
-	if (!leaderboard) {
-		console.error("Leaderboard element not found.");
-		return;
-	}
-
-	const usernames = JSON.parse(sessionStorage.getItem("usernames")) || [];
-
-	// Check if the usernames array is defined
-	if (!usernames || !Array.isArray(usernames)) {
-		console.error("Usernames array not found or not an array.");
-		return;
-	}
-
-	leaderboard.innerHTML = "";
-
-	for (let i = 0; i < usernames.length; i++) {
-		const listItem = document.createElement("li");
-		const markElement = document.createElement("mark");
-		markElement.textContent = usernames[i];
-		listItem.appendChild(markElement);
-		const smallElement = document.createElement("small");
-		smallElement.textContent = "0";
-		listItem.appendChild(smallElement);
-		leaderboard.appendChild(listItem);
-	}
-}
-
-function updateLeaderboard(username, moves) {
-	const usernames = JSON.parse(sessionStorage.getItem("usernames")) || [];
-	const newEntry = { username, moves };
-	usernames.unshift(newEntry);
-
-	if (usernames.length > 5) {
-		usernames.pop();
-	}
-
-	sessionStorage.setItem("usernames", JSON.stringify(usernames));
-
-	//createLeaderboard();
 }
 
 function changeCharacterImage() {
@@ -707,5 +676,34 @@ function changeCharacterImage() {
 	document.getElementById("character-icon").src = imageUrl;
 }
 
+function updateUserLeaderboard(username, moves) {
+	//get usernames
+	const usernames = JSON.parse(sessionStorage.getItem("usernames")) || [];
 
-	
+	// Check if the user already exists in the leaderboard
+	const existingUserIndex = usernames.findIndex(
+		(user) => user.username === username
+	);
+
+	if (existingUserIndex !== -1) {
+		//update moves
+		usernames[existingUserIndex].moves = moves;
+	} else {
+		//add a new entry
+		usernames.unshift({ username, moves });
+
+		//maintain 5 users on leaderboard
+		if (usernames.length > 5) {
+			usernames.pop();
+		}
+	}
+
+	//use JSON.stringify to store the list of users per the current session
+	sessionStorage.setItem("usernames", JSON.stringify(usernames));
+
+	console.log("Usernames added or updated:", username);
+	console.log(
+		"Usernames in sessionStorage:",
+		JSON.parse(sessionStorage.getItem("usernames"))
+	);
+}
