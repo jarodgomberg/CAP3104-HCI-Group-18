@@ -16,8 +16,17 @@
 			</ul>
 		</div>
 		<div class="leaderboard">
-			<h1>Recent Scores</h1>
-			<ol id="score-list">
+			<h1 id="score-title">Recent Scores</h1>
+			<div class="tab-link-container">
+				<button class="tab-link" id="easy-button">Easy</button>
+				<button class="tab-link" id="medium-button">Medium</button>
+				<button class="tab-link" id="hard-button">Hard</button>
+			</div>
+			<div class="list-container">
+				<ol id="score-list"></ol>
+				<ol id="medium-list"></ol>
+				<ol id="hard-list"></ol>
+			</div>
 		</div>
 		<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 		<script src="leaderboard.js"></script>
