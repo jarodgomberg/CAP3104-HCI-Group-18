@@ -39,7 +39,7 @@ function displayVictoryMess(moves) {
 	//append the overlay to the body
 	document.body.appendChild(overlay);
 
-	updateUserLeaderboard(username, moves);
+	updateUserLeaderboard(username, moves, difficulty);
 }
 
 function Maze(Width, Height) {
@@ -634,35 +634,32 @@ function resetMazeData() {
 //function to add usernames entered in game window to the leaderboard
 function addUser() {
 	const userInput = document.getElementById("user-input");
+	const difficultySelect = document.getElementById("difficulty");
 
-	// Check if the element with ID "user-input" exists
-	if (!userInput) {
-		console.error("Element with ID 'user-input' not found.");
+	if (!userInput || !difficultySelect) {
+		console.error("Required elements not found.");
 		return;
 	}
 
-	const username = userInput.value;
+	const username = userInput.value.trim();
+	const difficulty = difficultySelect.value;
 
-	if (!username || username.trim() === "") {
+	if (!username || username === "") {
 		alert("Please enter a username.");
 		return;
 	}
 
-	// Get existing usernames
 	const usernames = JSON.parse(sessionStorage.getItem("usernames")) || [];
 
-	// update username list (add new)
-	usernames.unshift({ username, moves: 0 });
+	usernames.unshift({ username, moves: 0, difficulty });
 
-	// maintain 5 users on leaderboard
 	if (usernames.length > 5) {
 		usernames.pop();
 	}
 
-	// use json.stringify to store the list of users per the current session
 	sessionStorage.setItem("usernames", JSON.stringify(usernames));
 
-	console.log("Usernames added:", username);
+	console.log("User added:", { username, moves: 0, difficulty });
 	console.log(
 		"Usernames in sessionStorage:",
 		JSON.parse(sessionStorage.getItem("usernames"))
@@ -676,32 +673,27 @@ function changeCharacterImage() {
 	document.getElementById("character-icon").src = imageUrl;
 }
 
-function updateUserLeaderboard(username, moves) {
-	//get usernames
+function updateUserLeaderboard(username, moves, difficulty) {
 	const usernames = JSON.parse(sessionStorage.getItem("usernames")) || [];
 
-	// Check if the user already exists in the leaderboard
 	const existingUserIndex = usernames.findIndex(
 		(user) => user.username === username
 	);
 
 	if (existingUserIndex !== -1) {
-		//update moves
 		usernames[existingUserIndex].moves = moves;
+		usernames[existingUserIndex].difficulty = difficulty;
 	} else {
-		//add a new entry
-		usernames.unshift({ username, moves });
+		usernames.unshift({ username, moves, difficulty });
 
-		//maintain 5 users on leaderboard
 		if (usernames.length > 5) {
 			usernames.pop();
 		}
 	}
 
-	//use JSON.stringify to store the list of users per the current session
 	sessionStorage.setItem("usernames", JSON.stringify(usernames));
 
-	console.log("Usernames added or updated:", username);
+	console.log("User added or updated:", { username, moves, difficulty });
 	console.log(
 		"Usernames in sessionStorage:",
 		JSON.parse(sessionStorage.getItem("usernames"))
